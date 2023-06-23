@@ -1,0 +1,9 @@
+server:
+  port: 8000
+
+#spring:
+#  security:
+#    oauth2:
+#      authorizationserver:
+#        client:
+#          oauth2-resource-server:

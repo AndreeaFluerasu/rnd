@@ -1,0 +1,60 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1.0" author="system">
+        <createTable tableName="bank_accounts">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="iban" type="VARCHAR(34)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="holder_name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="balance_amount" type="DECIMAL(15,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="balance_currency" type="VARCHAR(3)">
+                <constraints nullable="false" />
+            </column>
+            <column name="creation_timestamp" type="TIMESTAMP WITH TIMEZONE">
+                <constraints nullable="false" />
+            </column>
+            <column name="version" type="BIGINT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2.0" author="system">
+        <createTable tableName="transactions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="debit_credit_indicator" type="VARCHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_to_end_id" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="bank_account_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="bank_accounts"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_transactions_bank_account_id"/>
+            </column>
+            <column name="counterparty_account" type="VARCHAR(34)">
+                <constraints nullable="false" />
+            </column>
+            <column name="transaction_amount" type="DECIMAL(15,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="transaction_currency" type="VARCHAR(3)">
+                <constraints nullable="false" />
+            </column>
+            <column name="creation_timestamp" type="TIMESTAMP WITH TIMEZONE">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
