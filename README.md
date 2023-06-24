@@ -32,10 +32,10 @@ The query to select the latest 50 transactions for a specific beneficiary would 
 > order by id desc  
 > limit 50;  
 
-Adding a B-tree index on **(beneficiary_public_identifier ASC)** may be beneficial,  
-but in certain scenarios the sorting of transactions would be performed in an explicit sort node.  
-A more effective approach would be to create an index on (beneficiary_public_identifier ASC, id DESC).  
-This index would allow the index scan node to retrieve the transactions already ordered by id,  
+Adding a B-tree index on **(beneficiary_public_identifier ASC)** may be beneficial, 
+but in certain scenarios the sorting of transactions would be performed in an explicit sort node. 
+A more effective approach would be to create an index on (beneficiary_public_identifier ASC, id DESC). 
+This index would allow the index scan node to retrieve the transactions already ordered by id, 
 eliminating the need for an additional sorting step.  
 
 **** 
@@ -113,7 +113,8 @@ Here are three examples
     
     A multi-column GIN index can be used for query conditions involving any subset of the index's columns.  
     
-    Unlike B-trees or GiST (Generalized Search Tree), the search effectiveness of a GIN index remains consistent regardless of which index column(s) the query conditions use. This flexibility makes GIN indexes particularly useful for scenarios involving full-text search or composite values.
+    Unlike B-trees or GiST (Generalized Search Tree), the search effectiveness of a GIN index remains consistent regardless of which index column(s) the query conditions use.  
+    This flexibility makes GIN indexes particularly useful for scenarios involving full-text search or composite values.
 
 
 Let's consider a scenario where a beneficiary wants to retrieve transactions based on a specific value in the reference field.
@@ -121,7 +122,7 @@ In our scenario, a GIN index would be suitable because the reference column is o
 > explain analyse   
 > select * from db_indexes.credit_transactions  
 > where beneficiary_public_identifier = 'fb6e0960-10eb-4214-8301-2467667e4f22'  
-> and reference like '%something%'  
+> and reference like '%40a3%'  
 > order by id desc  
 > limit 50;  
 
@@ -169,28 +170,26 @@ Let's add a GIN index on (beneficiary_public_identifier, reference gin_trgm_ops)
     The purpose of the Bitmap Heap Scan node is to organize and sort the row locations before retrieving the actual rows from the table.  
 
     Parallel queries include a Gather or Gather Merge node.  
-
-    Gather Merge node indicated that each process executing the parallel portion of the plan is producing tuples in sorted order, and that the leader is performing an order-preserving merge.  
-
-    Gather reads tuples from the workers in any convenient order.
+        > Gather Merge node indicates that each process executing the parallel portion of the plan is producing tuples in sorted order, and that the leader is performing an order-preserving merge.  
+        > Gather reads tuples from the workers in any convenient order.
 
 ***
 
     If the query requires joining two or more relations there are 3 join strategies available:  
 
         Nested loop join
-            - The right relation is scanned once for every row found in the left relation  
-            - If the planner decides to optimize the query plan by "materializing" the right relation, it introduces a Materialize node.   
+            > The right relation is scanned once for every row found in the left relation  
+            > If the planner decides to optimize the query plan by "materializing" the right relation, it introduces a Materialize node.   
               Its purpose is to store the data retrieved from the right relation in memory.  
               This means that the right relation scan is performed only once, 
               even though the nested loop join node may need to access that data multiple times for each row returned by the left relation scan.
 
         Merge join 
-            - Each relation is sorted on the join attributes before the join starts.  
-            - The sorting is either done by an index scan node or is an explicit step
-            - The two relations are scanned in parallel and the matching rows are combined to form join rows.
+            > Each relation is sorted on the join attributes before the join starts.  
+            > The sorting is either done by an index scan node or is an explicit step
+            > The two relations are scanned in parallel and the matching rows are combined to form join rows.
 
         Hash join
-            - The right relation is first scanned and loaded into a hash table using its join attributes as hash keys
-            - Next, the left relation si scanned and the join attributes are used as hash key to locate the matching rows in the table.
+            > The right relation is first scanned and loaded into a hash table using its join attributes as hash keys
+            > Next, the left relation si scanned and the join attributes are used as hash key to locate the matching rows in the table.
 
