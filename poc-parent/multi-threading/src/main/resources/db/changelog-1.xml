@@ -1,0 +1,29 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="multi-threading-1.0" author="system">
+        <createTable tableName="credit_transactions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="beneficiary_public_identifier" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount_value" type="DECIMAL(15,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount_currency" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payer_name" type="VARCHAR(60)">
+                <constraints nullable="false" />
+            </column>
+            <column name="end_to_end_id" type="VARCHAR(35)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_credit_transactions_end_to_end_id"/>
+            </column>
+            <column name="reference" type="VARCHAR(140)"/>
+            <column name="creation_timestamp" type="TIMESTAMP WITH TIMEZONE">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

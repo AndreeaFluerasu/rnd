@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/poc_parent?currentSchema=multi_threading
+    username: poc_parent
+    password: poc_parent
+    driver-class-name: org.postgresql.Driver
+
+  jpa.open-in-view: false
+
+  liquibase:
+    change-log: classpath:db/changelog.xml
+    enabled: true
+
+
+#logging:
+#  level:
+#    ROOT: INFO
+#    org:
+#      springframework:
+##        transaction: DEBUG
+#        orm:
+#          jpa: DEBUG
+#  file:
+#    path: /Users/andreeafluerasu/rndlog
+#      hibernate:
+#        engine:
+#          transaction:
+#            internal:
+#              TransactionImpl: DEBUG
