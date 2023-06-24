@@ -34,7 +34,6 @@ public class Amount {
             throw new IllegalArgumentException(format("Subtracted amount currency %s does not match account currency %s", amount, this));
         }
         this.value = this.value.subtract(amount.getValue());
-        System.out.println("olaSUB: " + this.value);
     }
 
     public void addAmount(Amount amount) {
