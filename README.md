@@ -40,8 +40,8 @@ eliminating the need for an additional sorting step.
 
 **** 
 
-Having the index on the primary key and the index on (beneficiary_public_identifier ASC), 
-when running the above query and the items that match the query condition are spread across the table, 
+Having an index on the primary key and an index on (beneficiary_public_identifier ASC), 
+when running the above query, if the items that match the query condition are spread across the table, 
 the query plan will use the index on the primary key **(credit_transactions_pkey)**:
 
     Limit  (cost=0.43..20.72 rows=50 width=140) (actual time=8342.530..9644.817 rows=50 loops=1)  
@@ -53,8 +53,8 @@ the query plan will use the index on the primary key **(credit_transactions_pkey
 
 ****
 
-Having the index on the primary key and the index on (beneficiary_public_identifier ASC),
-when running the above query and the items that match the query condition are located in the middle of the table
+Having an index on the primary key and an index on (beneficiary_public_identifier ASC),
+when running the above query, if the items that match the query condition are located in the middle of the table
 the query plan may choose to use the index on **beneficiary_public_identifier** and **separately sort the transactions***.
   
     Limit  (cost=630.12..630.25 rows=50 width=140) (actual time=2173.806..2173.828 rows=50 loops=1)  
@@ -69,8 +69,8 @@ the query plan may choose to use the index on **beneficiary_public_identifier** 
     Planning Time: 1.293 ms  
     Execution Time: 2174.512 ms  
 ****
-Having the index on the primary key and the index on (beneficiary_public_identifier ASC, id desc) and
-the items that match the query condition are spread across the table, 
+Having an index on the primary key and an index on (beneficiary_public_identifier ASC, id desc), when running the above query,
+if the items that match the query condition are spread across the table, 
 the query plan uses the index on **(beneficiary_public_identifier ASC, id desc)**:
 
     Limit  (cost=0.56..20.75 rows=50 width=140) (actual time=0.967..0.992 rows=50 loops=1)  
@@ -79,8 +79,8 @@ the query plan uses the index on **(beneficiary_public_identifier ASC, id desc)*
     Planning Time: 5.477 ms  
     Execution Time: 1.028 ms  
 ****
-Having the index on the primary key and the index on (beneficiary_public_identifier ASC, id desc) and
-the items that match the query condition are located in the middle of the table, the query plan uses the index on **(beneficiary_public_identifier ASC, id desc)**
+Having an index on the primary key and an index on (beneficiary_public_identifier ASC, id desc), when running the above query,
+if the items that match the query condition are located in the middle of the table, the query plan uses the index on **(beneficiary_public_identifier ASC, id desc)**
 > Limit  (cost=0.56..182.03 rows=50 width=140) (actual time=0.068..0.160 rows=50 loops=1)  
 >   ->  Index Scan using idx_credit_transactions_beneficiary_public_identifier_id_desc on credit_transactions  (cost=0.56..875.26 rows=241 width=140) (actual time=0.067..0.153 rows=50 loops=1)  
 >   Index Cond: (beneficiary_public_identifier = '0b5f709c-85f4-4e12-95c4-4121b23141a8'::uuid)  
